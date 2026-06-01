@@ -26,6 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function initAxios() {
+    axios.defaults.baseURL = import.meta.env.VITE_API_URL || ''
     if (token.value) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
     }
