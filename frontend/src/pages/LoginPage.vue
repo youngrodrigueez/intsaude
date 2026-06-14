@@ -16,38 +16,26 @@
     <!-- Tabs -->
     <div class="tab-wrapper">
       <div class="tab-switcher">
-        <button class="tab-btn active">Entrar</button>
-        <button class="tab-btn">Cadastrar</button>
+        <button class="tab-btn" :class="{ active: tab === 'login' }" @click="tab = 'login'">Entrar</button>
+        <button class="tab-btn" :class="{ active: tab === 'register' }" @click="tab = 'register'">Cadastrar</button>
       </div>
     </div>
 
-    <!-- Card -->
-    <div class="form-card">
+    <!-- Card Login -->
+    <div v-if="tab === 'login'" class="form-card">
       <div class="form-title">Bem-vindo de volta</div>
       <div class="form-sub">Entre com sua conta para continuar</div>
 
       <form @submit.prevent="handleLogin">
         <div class="field-group">
           <label class="field-label">E-MAIL</label>
-          <input
-            v-model="email"
-            type="email"
-            placeholder="seu@email.com"
-            class="field-input"
-            required
-          />
+          <input v-model="email" type="email" placeholder="seu@email.com" class="field-input" required />
         </div>
 
         <div class="field-group">
           <label class="field-label">SENHA</label>
           <div class="input-row">
-            <input
-              v-model="password"
-              :type="showPass ? 'text' : 'password'"
-              placeholder="••••••••"
-              class="field-input"
-              required
-            />
+            <input v-model="password" :type="showPass ? 'text' : 'password'" placeholder="••••••••" class="field-input" required />
             <button type="button" class="ver-btn" @click="showPass = !showPass">
               {{ showPass ? 'Ocultar' : 'Ver' }}
             </button>
@@ -58,12 +46,10 @@
         </div>
 
         <button type="submit" class="submit-btn" :disabled="loading">
-          <span v-if="loading">Entrando...</span>
-          <span v-else>Entrar</span>
+          {{ loading ? 'Entrando...' : 'Entrar' }}
         </button>
       </form>
 
-      <!-- Demo -->
       <div class="demo-section">
         <div class="demo-label">ACESSO DEMO</div>
         <div class="demo-card">
@@ -78,6 +64,43 @@
         </div>
       </div>
     </div>
+
+    <!-- Card Cadastro -->
+    <div v-else class="form-card">
+      <div class="form-title">Criar conta</div>
+      <div class="form-sub">Preencha os dados para se cadastrar</div>
+
+      <form @submit.prevent="handleRegister">
+        <div class="field-group">
+          <label class="field-label">NOME COMPLETO</label>
+          <input v-model="regName" type="text" placeholder="Seu nome" class="field-input" required />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">E-MAIL</label>
+          <input v-model="regEmail" type="email" placeholder="seu@email.com" class="field-input" required />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">SENHA</label>
+          <div class="input-row">
+            <input v-model="regPassword" :type="showRegPass ? 'text' : 'password'" placeholder="••••••••" class="field-input" required />
+            <button type="button" class="ver-btn" @click="showRegPass = !showRegPass">
+              {{ showRegPass ? 'Ocultar' : 'Ver' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">CONFIRMAR SENHA</label>
+          <input v-model="regConfirm" :type="showRegPass ? 'text' : 'password'" placeholder="••••••••" class="field-input" required />
+        </div>
+
+        <button type="submit" class="submit-btn" :disabled="loadingReg">
+          {{ loadingReg ? 'Cadastrando...' : 'Criar conta' }}
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -85,16 +108,27 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
+import axios from 'axios'
 import { useAuthStore } from '../stores/auth.js'
 
+const tab = ref('login')
+const router = useRouter()
+const $q = useQuasar()
+const auth = useAuthStore()
+
+// Login
 const email = ref('')
 const password = ref('')
 const showPass = ref(false)
 const loading = ref(false)
 
-const router = useRouter()
-const $q = useQuasar()
-const auth = useAuthStore()
+// Cadastro
+const regName = ref('')
+const regEmail = ref('')
+const regPassword = ref('')
+const regConfirm = ref('')
+const showRegPass = ref(false)
+const loadingReg = ref(false)
 
 async function handleLogin() {
   loading.value = true
@@ -105,6 +139,38 @@ async function handleLogin() {
     $q.notify({ type: 'negative', message: 'E-mail ou senha inválidos', position: 'top' })
   } finally {
     loading.value = false
+  }
+}
+
+async function handleRegister() {
+  if (regPassword.value !== regConfirm.value) {
+    $q.notify({ type: 'negative', message: 'As senhas não coincidem', position: 'top' })
+    return
+  }
+  if (regPassword.value.length < 6) {
+    $q.notify({ type: 'negative', message: 'A senha deve ter pelo menos 6 caracteres', position: 'top' })
+    return
+  }
+
+  loadingReg.value = true
+  try {
+    const res = await axios.post('/api/auth/register', {
+      name: regName.value,
+      email: regEmail.value,
+      password: regPassword.value
+    })
+    auth.token = res.data.token
+    auth.user = res.data.user
+    localStorage.setItem('token', res.data.token)
+    localStorage.setItem('user', JSON.stringify(res.data.user))
+    axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`
+    $q.notify({ type: 'positive', message: `Bem-vindo, ${res.data.user.name}!`, position: 'top' })
+    router.push('/dashboard')
+  } catch (err) {
+    const msg = err.response?.data?.message || 'Erro ao criar conta'
+    $q.notify({ type: 'negative', message: msg, position: 'top' })
+  } finally {
+    loadingReg.value = false
   }
 }
 </script>
@@ -149,7 +215,6 @@ async function handleLogin() {
 .brand-sub {
   font-size: 14px;
   color: #7eb8f7;
-  font-weight: 400;
 }
 
 .status-badge {
@@ -303,18 +368,10 @@ async function handleLogin() {
   transition: background 0.2s;
 }
 
-.submit-btn:hover {
-  background: #1a3560;
-}
+.submit-btn:hover { background: #1a3560; }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.submit-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.demo-section {
-  margin-top: 24px;
-}
+.demo-section { margin-top: 24px; }
 
 .demo-label {
   text-align: center;
@@ -354,12 +411,6 @@ async function handleLogin() {
   font-size: 14px;
 }
 
-.demo-key {
-  color: #9ca3af;
-}
-
-.demo-val {
-  color: #111827;
-  font-weight: 600;
-}
+.demo-key { color: #9ca3af; }
+.demo-val { color: #111827; font-weight: 600; }
 </style>

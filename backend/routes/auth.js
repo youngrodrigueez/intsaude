@@ -5,6 +5,33 @@ const db = require('../database')
 
 const router = express.Router()
 
+router.post('/register', (req, res) => {
+  const { name, email, password } = req.body
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: 'Preencha todos os campos obrigatórios' })
+  }
+
+  const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email)
+  if (existing) {
+    return res.status(409).json({ message: 'E-mail já cadastrado' })
+  }
+
+  const hash = bcrypt.hashSync(password, 10)
+  const result = db.prepare('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)').run(name, email, hash, 'user')
+
+  const token = jwt.sign(
+    { id: result.lastInsertRowid, name, email, role: 'user' },
+    process.env.JWT_SECRET || 'intsaude_jwt_secret_2024',
+    { expiresIn: '8h' }
+  )
+
+  res.status(201).json({
+    token,
+    user: { id: result.lastInsertRowid, name, email, role: 'user' }
+  })
+})
+
 router.post('/login', (req, res) => {
   const { email, password } = req.body
 
