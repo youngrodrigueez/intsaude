@@ -6,10 +6,16 @@
         <div class="page-sub">Consultas marcadas no sistema</div>
       </div>
       <q-space />
-      <button class="add-btn" @click="openDialog()">
-        <q-icon name="add" size="18px" />
-        Novo Agendamento
-      </button>
+      <div class="row q-gutter-sm">
+        <button class="export-btn" @click="exportPDF">
+          <q-icon name="picture_as_pdf" size="17px" />
+          Exportar PDF
+        </button>
+        <button class="add-btn" @click="openDialog()">
+          <q-icon name="add" size="18px" />
+          Novo Agendamento
+        </button>
+      </div>
     </div>
 
     <div class="white-card">
@@ -65,7 +71,6 @@
             <q-icon name="close" size="18px" />
           </button>
         </div>
-
         <q-card-section class="q-pt-lg">
           <q-form @submit="saveAppointment" class="q-gutter-sm">
             <div class="row q-col-gutter-sm">
@@ -103,6 +108,8 @@
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import { useQuasar } from 'quasar'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const $q = useQuasar()
 const appointments = ref([])
@@ -158,6 +165,40 @@ function badgeColor(s) {
 
 function statusLabel(s) {
   return s === 'scheduled' ? 'Agendado' : s === 'completed' ? 'Concluído' : 'Cancelado'
+}
+
+function exportPDF() {
+  const doc = new jsPDF()
+
+  doc.setFillColor(13, 32, 64)
+  doc.rect(0, 0, 210, 28, 'F')
+  doc.setTextColor(255, 255, 255)
+  doc.setFontSize(18)
+  doc.setFont('helvetica', 'bold')
+  doc.text('intSaude', 14, 12)
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
+  doc.text('Relatorio de Agendamentos', 14, 20)
+  doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, 145, 20)
+
+  doc.setTextColor(0, 0, 0)
+
+  autoTable(doc, {
+    startY: 35,
+    head: [['Paciente', 'Hospital', 'Data', 'Hora', 'Status']],
+    body: appointments.value.map(a => [
+      a.patient_name,
+      a.hospital_name,
+      formatDate(a.date),
+      a.time,
+      statusLabel(a.status)
+    ]),
+    headStyles: { fillColor: [13, 32, 64], textColor: 255, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [240, 244, 248] },
+    styles: { fontSize: 10 }
+  })
+
+  doc.save('agendamentos-intsaude.pdf')
 }
 
 function openDialog(row = null) {
@@ -236,8 +277,23 @@ onMounted(load)
   cursor: pointer;
   transition: background 0.15s;
 }
-
 .add-btn:hover { background: #1a3560; }
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  color: #0d2040;
+  border: 2px solid #0d2040;
+  border-radius: 12px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.export-btn:hover { background: #f0f4f8; }
 
 .white-card {
   background: white;
@@ -288,7 +344,6 @@ onMounted(load)
   cursor: pointer;
   transition: background 0.15s;
 }
-
 .edit-btn { background: #eff6ff; color: #2563eb; }
 .edit-btn:hover { background: #dbeafe; }
 .del-btn { background: #fef2f2; color: #dc2626; }
@@ -301,9 +356,7 @@ onMounted(load)
   padding: 20px 24px;
   background: #0d2040;
 }
-
 .dialog-title { font-size: 17px; font-weight: 700; color: white; }
-
 .close-btn {
   background: rgba(255,255,255,0.12);
   border: none;
