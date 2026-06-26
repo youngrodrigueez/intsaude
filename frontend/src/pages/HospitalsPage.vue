@@ -94,7 +94,17 @@ const COORDS = {
   'Hospital Regional da Asa Norte (HRAN)': [-15.7424, -47.8899],
   'Hospital Santa Lúcia': [-15.8336, -47.9195],
   'Hospital Brasília': [-15.8127, -47.9103],
-  'Hospital Daher Lago Sul': [-15.8376, -47.9010]
+  'Hospital Daher Lago Sul': [-15.8376, -47.9010],
+  'Hospital Regional de Taguatinga (HRT)': [-15.8326, -48.0419],
+  'Hospital Regional de Ceilândia (HRC)': [-15.8157, -48.1075],
+  'Hospital Regional do Gama (HRG)': [-16.0153, -48.0654],
+  'Hospital Regional de Samambaia (HRSAM)': [-15.8755, -48.0903],
+  'Hospital Regional de Sobradinho (HRS)': [-15.6520, -47.7900],
+  'Hospital Regional de Planaltina (HRP)': [-15.6253, -47.6535],
+  'Hospital Regional do Paranoá (HRPa)': [-15.7755, -47.7720],
+  'Hospital Regional do Guará (HRGu)': [-15.8275, -47.9786],
+  'Hospital São Vicente de Paulo': [-15.8312, -48.0455],
+  'Hospital Universitário de Brasília (HUB)': [-15.7558, -47.8689]
 }
 
 const filtered = computed(() => {
@@ -123,7 +133,7 @@ watch(showMap, async (val) => {
 
 function initMap() {
   if (mapInstance) return
-  mapInstance = L.map('hospital-map').setView([-15.78, -47.93], 12)
+  mapInstance = L.map('hospital-map').setView([-15.83, -47.95], 10)
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'

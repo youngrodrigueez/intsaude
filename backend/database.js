@@ -87,4 +87,26 @@ if (userCount.count === 0) {
   insertAppt.run(3, 3, '2026-06-05', '11:00', 'completed', 'Retorno pós-cirurgia')
 }
 
+// Hospitais adicionais de outras regiões do DF
+const moreHospitals = [
+  ['Hospital Regional de Taguatinga (HRT)', 'QNC Área Especial, Taguatinga Centro', 'Taguatinga', '(61) 3352-1000', 'Geral', 1, 4.1],
+  ['Hospital Regional de Ceilândia (HRC)', 'QNM 13, Área Especial, Ceilândia', 'Ceilândia', '(61) 3373-5000', 'Geral', 1, 3.9],
+  ['Hospital Regional do Gama (HRG)', 'Av. Castro Alves, Setor Leste, Gama', 'Gama', '(61) 3389-2400', 'Geral', 1, 4.0],
+  ['Hospital Regional de Samambaia (HRSAM)', 'QS 109, Área Especial, Samambaia', 'Samambaia', '(61) 3358-4000', 'Geral', 1, 3.8],
+  ['Hospital Regional de Sobradinho (HRS)', 'Quadra 09, Área Especial, Sobradinho', 'Sobradinho', '(61) 3387-1500', 'Geral', 1, 4.0],
+  ['Hospital Regional de Planaltina (HRP)', 'Área Especial nº 1, Setor Tradicional, Planaltina', 'Planaltina', '(61) 3389-7600', 'Geral', 1, 3.9],
+  ['Hospital Regional do Paranoá (HRPa)', 'Quadra 02, Área Especial, Paranoá', 'Paranoá', '(61) 3445-2900', 'Geral', 0, 3.7],
+  ['Hospital Regional do Guará (HRGu)', 'QE 09, Área Especial, Guará II', 'Guará', '(61) 3901-5800', 'Pediatria', 1, 4.2],
+  ['Hospital São Vicente de Paulo', 'Praça do Relógio, Taguatinga Centro', 'Taguatinga', '(61) 3561-9000', 'Cardiologia', 1, 4.4],
+  ['Hospital Universitário de Brasília (HUB)', 'SGAN 605, Asa Norte', 'Brasília', '(61) 3448-5000', 'Geral', 1, 4.3],
+]
+
+const existingNames = new Set(db.prepare('SELECT name FROM hospitals').all().map(h => h.name))
+const insertMoreHospital = db.prepare(
+  'INSERT INTO hospitals (name, address, city, phone, specialty, available, rating) VALUES (?, ?, ?, ?, ?, ?, ?)'
+)
+moreHospitals.forEach(h => {
+  if (!existingNames.has(h[0])) insertMoreHospital.run(...h)
+})
+
 module.exports = db
