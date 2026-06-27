@@ -1,8 +1,9 @@
 import { createApp } from 'vue'
-import { Quasar, Notify, Dialog } from 'quasar'
+import { Quasar, Notify, Dialog, Dark } from 'quasar'
 import { createPinia } from 'pinia'
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/dist/quasar.css'
+import './styles/dark.css'
 import router from './router/index.js'
 import App from './App.vue'
 import { useAuthStore } from './stores/auth.js'
@@ -17,7 +18,7 @@ auth.initAxios()
 
 app.use(router)
 app.use(Quasar, {
-  plugins: { Notify, Dialog },
+  plugins: { Notify, Dialog, Dark },
   config: {
     brand: {
       primary: '#1565C0',
@@ -28,5 +29,7 @@ app.use(Quasar, {
     }
   }
 })
+
+Dark.set(localStorage.getItem('darkMode') === 'true')
 
 app.mount('#app')

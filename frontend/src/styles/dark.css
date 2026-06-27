@@ -1,0 +1,86 @@
+body.body--dark {
+  background: #0f172a;
+}
+
+body.body--dark .q-page {
+  background: #0f172a !important;
+}
+
+body.body--dark .white-card,
+body.body--dark .stat-card,
+body.body--dark .hospital-card,
+body.body--dark .map-card {
+  background: #1e293b;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+body.body--dark .page-title,
+body.body--dark .hospital-name,
+body.body--dark .stat-value,
+body.body--dark .appt-name,
+body.body--dark .card-title,
+body.body--dark .section-title,
+body.body--dark .form-title {
+  color: #f1f5f9 !important;
+}
+
+body.body--dark .page-sub,
+body.body--dark .stat-label,
+body.body--dark .appt-hospital,
+body.body--dark .info-row,
+body.body--dark .rating-val,
+body.body--dark .empty-text,
+body.body--dark .appt-date,
+body.body--dark .appt-hour {
+  color: #94a3b8 !important;
+}
+
+body.body--dark .search-box {
+  background: #0f172a;
+}
+
+body.body--dark .search-input {
+  color: #f1f5f9;
+}
+
+body.body--dark .search-input::placeholder {
+  color: #64748b;
+}
+
+body.body--dark .appt-row {
+  border-bottom-color: #334155;
+}
+
+body.body--dark .appt-row:hover {
+  background: #273449;
+}
+
+body.body--dark .specialty-tag {
+  background: #1e3a5f;
+}
+
+body.body--dark .card-footer,
+body.body--dark .table-top {
+  border-top-color: #334155;
+}
+
+body.body--dark .avail-no {
+  background: #273449;
+}
+
+body.body--dark .q-table {
+  background: transparent;
+  color: #f1f5f9;
+}
+
+body.body--dark .q-table th {
+  color: #94a3b8;
+}
+
+body.body--dark .demo-card {
+  background: #1e293b;
+}
+
+body.body--dark .demo-val {
+  color: #f1f5f9;
+}

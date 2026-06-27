@@ -6,10 +6,20 @@
         <div class="page-sub">Gerencie os pacientes cadastrados</div>
       </div>
       <q-space />
-      <button class="add-btn" @click="openDialog()">
-        <q-icon name="add" size="18px" />
-        Novo Paciente
-      </button>
+      <div class="row q-gutter-sm">
+        <button class="export-btn" @click="exportPDF">
+          <q-icon name="picture_as_pdf" size="17px" />
+          PDF
+        </button>
+        <button class="export-btn" @click="exportExcel">
+          <q-icon name="grid_on" size="17px" />
+          Excel
+        </button>
+        <button class="add-btn" @click="openDialog()">
+          <q-icon name="add" size="18px" />
+          Novo Paciente
+        </button>
+      </div>
     </div>
 
     <div class="white-card">
@@ -97,6 +107,8 @@
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import { useQuasar } from 'quasar'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const $q = useQuasar()
 const patients = ref([])
@@ -131,6 +143,64 @@ const filteredPatients = computed(() => {
 
 function formatDate(d) {
   return new Date(d + 'T00:00:00').toLocaleDateString('pt-BR')
+}
+
+function exportPDF() {
+  const doc = new jsPDF()
+
+  doc.setFillColor(13, 32, 64)
+  doc.rect(0, 0, 210, 28, 'F')
+  doc.setTextColor(255, 255, 255)
+  doc.setFontSize(18)
+  doc.setFont('helvetica', 'bold')
+  doc.text('intSaude', 14, 12)
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
+  doc.text('Relatorio de Pacientes', 14, 20)
+  doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, 145, 20)
+
+  doc.setTextColor(0, 0, 0)
+
+  autoTable(doc, {
+    startY: 35,
+    head: [['Nome', 'CPF', 'Telefone', 'E-mail', 'Nascimento']],
+    body: patients.value.map(p => [
+      p.name,
+      p.cpf,
+      p.phone || '—',
+      p.email || '—',
+      p.birth_date ? formatDate(p.birth_date) : '—'
+    ]),
+    headStyles: { fillColor: [13, 32, 64], textColor: 255, fontStyle: 'bold' },
+    alternateRowStyles: { fillColor: [240, 244, 248] },
+    styles: { fontSize: 10 }
+  })
+
+  doc.save('pacientes-intsaude.pdf')
+}
+
+function exportExcel() {
+  const headers = ['Nome', 'CPF', 'Telefone', 'E-mail', 'Nascimento', 'Endereço']
+  const rows = patients.value.map(p => [
+    p.name,
+    p.cpf,
+    p.phone || '',
+    p.email || '',
+    p.birth_date ? formatDate(p.birth_date) : '',
+    p.address || ''
+  ])
+
+  const csv = [headers, ...rows]
+    .map(row => row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(';'))
+    .join('\n')
+
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'pacientes-intsaude.csv'
+  link.click()
+  URL.revokeObjectURL(url)
 }
 
 function openDialog(row = null) {
@@ -202,6 +272,22 @@ onMounted(load)
 }
 
 .add-btn:hover { background: #1a3560; }
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  color: #0d2040;
+  border: 2px solid #0d2040;
+  border-radius: 12px;
+  padding: 9px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.export-btn:hover { background: #f0f4f8; }
 
 .white-card {
   background: white;

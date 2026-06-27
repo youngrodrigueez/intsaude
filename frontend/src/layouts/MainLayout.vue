@@ -10,6 +10,9 @@
           <span class="logo-text-sm">intSaúde</span>
         </div>
         <q-space />
+        <q-btn flat round :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'" color="white" @click="toggleDark" size="sm" class="q-mr-sm">
+          <q-tooltip>{{ $q.dark.isActive ? 'Modo claro' : 'Modo escuro' }}</q-tooltip>
+        </q-btn>
         <div class="user-chip">
           <q-icon name="person" size="16px" />
           <span>{{ auth.user?.name }}</span>
@@ -70,11 +73,18 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 import { useAuthStore } from '../stores/auth.js'
 
 const drawer = ref(false)
 const router = useRouter()
 const auth = useAuthStore()
+const $q = useQuasar()
+
+function toggleDark() {
+  $q.dark.toggle()
+  localStorage.setItem('darkMode', $q.dark.isActive)
+}
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: 'dashboard', exact: true },
