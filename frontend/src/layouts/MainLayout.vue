@@ -90,7 +90,8 @@ const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: 'dashboard', exact: true },
   { to: '/hospitals', label: 'Hospitais', icon: 'local_hospital', exact: false },
   { to: '/patients', label: 'Pacientes', icon: 'people', exact: false },
-  { to: '/appointments', label: 'Agendamentos', icon: 'calendar_today', exact: false }
+  { to: '/appointments', label: 'Agendamentos', icon: 'calendar_today', exact: false },
+  { to: '/about', label: 'Sobre Nós', icon: 'info', exact: false }
 ]
 
 function handleLogout() {

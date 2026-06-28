@@ -16,7 +16,8 @@ const routes = [
       { path: 'hospitals', component: () => import('../pages/HospitalsPage.vue') },
       { path: 'patients', component: () => import('../pages/PatientsPage.vue') },
       { path: 'appointments', component: () => import('../pages/AppointmentsPage.vue') },
-      { path: 'profile', component: () => import('../pages/ProfilePage.vue') }
+      { path: 'profile', component: () => import('../pages/ProfilePage.vue') },
+      { path: 'about', component: () => import('../pages/AboutPage.vue') }
     ]
   }
 ]
