@@ -52,7 +52,9 @@
           <div class="info-list">
             <div class="info-row">
               <q-icon name="place" size="15px" style="color: #94a3b8" />
-              <span>{{ h.address }}, {{ h.city }}</span>
+              <a :href="mapsUrl(h)" target="_blank" rel="noopener" class="address-link">
+                {{ h.address }}, {{ h.city }}
+              </a>
             </div>
             <div class="info-row">
               <q-icon name="phone" size="15px" style="color: #94a3b8" />
@@ -119,6 +121,12 @@ const filtered = computed(() => {
 
 function toggleMap() {
   showMap.value = !showMap.value
+}
+
+function mapsUrl(h) {
+  const coords = COORDS[h.name]
+  if (coords) return `https://www.google.com/maps?q=${coords[0]},${coords[1]}`
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(h.address + ', ' + h.city)}`
 }
 
 watch(showMap, async (val) => {
@@ -273,6 +281,16 @@ onMounted(async () => {
 
 .info-list { display: flex; flex-direction: column; gap: 6px; flex: 1; }
 .info-row { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #64748b; }
+
+.address-link {
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.address-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
 
 .card-footer {
   display: flex;

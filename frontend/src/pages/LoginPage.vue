@@ -1,7 +1,11 @@
 <template>
   <div class="login-bg">
+    <div class="blob blob-1" />
+    <div class="blob blob-2" />
+    <div class="blob blob-3" />
+
     <!-- Header / Brand -->
-    <div class="brand-section">
+    <div class="brand-section fade-in" style="animation-delay: 0s">
       <div class="logo-box">
         <q-icon name="favorite" size="36px" color="white" />
       </div>
@@ -14,7 +18,7 @@
     </div>
 
     <!-- Tabs -->
-    <div class="tab-wrapper">
+    <div class="tab-wrapper fade-in" style="animation-delay: 0.1s">
       <div class="tab-switcher">
         <button class="tab-btn" :class="{ active: tab === 'login' }" @click="tab = 'login'">Entrar</button>
         <button class="tab-btn" :class="{ active: tab === 'register' }" @click="tab = 'register'">Cadastrar</button>
@@ -22,20 +26,24 @@
     </div>
 
     <!-- Card Login -->
-    <div v-if="tab === 'login'" class="form-card">
+    <div v-if="tab === 'login'" class="form-card fade-in" style="animation-delay: 0.18s">
       <div class="form-title">Bem-vindo de volta</div>
       <div class="form-sub">Entre com sua conta para continuar</div>
 
       <form @submit.prevent="handleLogin">
         <div class="field-group">
           <label class="field-label">E-MAIL</label>
-          <input v-model="email" type="email" placeholder="seu@email.com" class="field-input" required />
+          <div class="input-row">
+            <q-icon name="mail" size="18px" class="field-icon" />
+            <input v-model="email" type="email" placeholder="seu@email.com" class="field-input has-icon" required />
+          </div>
         </div>
 
         <div class="field-group">
           <label class="field-label">SENHA</label>
           <div class="input-row">
-            <input v-model="password" :type="showPass ? 'text' : 'password'" placeholder="••••••••" class="field-input" required />
+            <q-icon name="lock" size="18px" class="field-icon" />
+            <input v-model="password" :type="showPass ? 'text' : 'password'" placeholder="••••••••" class="field-input has-icon has-action" required />
             <button type="button" class="ver-btn" @click="showPass = !showPass">
               {{ showPass ? 'Ocultar' : 'Ver' }}
             </button>
@@ -46,45 +54,39 @@
         </div>
 
         <button type="submit" class="submit-btn" :disabled="loading">
-          {{ loading ? 'Entrando...' : 'Entrar' }}
+          <q-spinner v-if="loading" size="18px" color="white" />
+          <span v-else>Entrar</span>
         </button>
       </form>
-
-      <div class="demo-section">
-        <div class="demo-label">ACESSO DEMO</div>
-        <div class="demo-card">
-          <div class="demo-row">
-            <span class="demo-key">E-mail</span>
-            <span class="demo-val">admin@intsaude.com</span>
-          </div>
-          <div class="demo-row">
-            <span class="demo-key">Senha</span>
-            <span class="demo-val">admin123</span>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Card Cadastro -->
-    <div v-else class="form-card">
+    <div v-else class="form-card fade-in" style="animation-delay: 0.18s">
       <div class="form-title">Criar conta</div>
       <div class="form-sub">Preencha os dados para se cadastrar</div>
 
       <form @submit.prevent="handleRegister">
         <div class="field-group">
           <label class="field-label">NOME COMPLETO</label>
-          <input v-model="regName" type="text" placeholder="Seu nome" class="field-input" required />
+          <div class="input-row">
+            <q-icon name="person" size="18px" class="field-icon" />
+            <input v-model="regName" type="text" placeholder="Seu nome" class="field-input has-icon" required />
+          </div>
         </div>
 
         <div class="field-group">
           <label class="field-label">E-MAIL</label>
-          <input v-model="regEmail" type="email" placeholder="seu@email.com" class="field-input" required />
+          <div class="input-row">
+            <q-icon name="mail" size="18px" class="field-icon" />
+            <input v-model="regEmail" type="email" placeholder="seu@email.com" class="field-input has-icon" required />
+          </div>
         </div>
 
         <div class="field-group">
           <label class="field-label">SENHA</label>
           <div class="input-row">
-            <input v-model="regPassword" :type="showRegPass ? 'text' : 'password'" placeholder="••••••••" class="field-input" required />
+            <q-icon name="lock" size="18px" class="field-icon" />
+            <input v-model="regPassword" :type="showRegPass ? 'text' : 'password'" placeholder="••••••••" class="field-input has-icon has-action" required />
             <button type="button" class="ver-btn" @click="showRegPass = !showRegPass">
               {{ showRegPass ? 'Ocultar' : 'Ver' }}
             </button>
@@ -93,13 +95,21 @@
 
         <div class="field-group">
           <label class="field-label">CONFIRMAR SENHA</label>
-          <input v-model="regConfirm" :type="showRegPass ? 'text' : 'password'" placeholder="••••••••" class="field-input" required />
+          <div class="input-row">
+            <q-icon name="lock" size="18px" class="field-icon" />
+            <input v-model="regConfirm" :type="showRegPass ? 'text' : 'password'" placeholder="••••••••" class="field-input has-icon" required />
+          </div>
         </div>
 
         <button type="submit" class="submit-btn" :disabled="loadingReg">
-          {{ loadingReg ? 'Cadastrando...' : 'Criar conta' }}
+          <q-spinner v-if="loadingReg" size="18px" color="white" />
+          <span v-else>Criar conta</span>
         </button>
       </form>
+    </div>
+
+    <div class="footer-note fade-in" style="animation-delay: 0.3s">
+      © 2026 intSaúde — Curso Análise e Desenvolvimento de Sistemas - UCB
     </div>
   </div>
 </template>
@@ -178,11 +188,56 @@ async function handleRegister() {
 <style scoped>
 .login-bg {
   min-height: 100vh;
-  background: #0d2040;
+  background: linear-gradient(160deg, #0a1830 0%, #0d2040 45%, #123158 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 48px 20px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blob-1 {
+  width: 320px;
+  height: 320px;
+  background: rgba(37, 99, 235, 0.25);
+  top: -120px;
+  left: -100px;
+}
+
+.blob-2 {
+  width: 280px;
+  height: 280px;
+  background: rgba(74, 222, 128, 0.12);
+  bottom: -80px;
+  right: -80px;
+}
+
+.blob-3 {
+  width: 220px;
+  height: 220px;
+  background: rgba(126, 184, 247, 0.15);
+  top: 40%;
+  right: -60px;
+}
+
+.fade-in {
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.5s ease both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .brand-section {
@@ -276,6 +331,7 @@ async function handleRegister() {
   width: 100%;
   max-width: 400px;
   margin-top: 8px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .form-title {
@@ -325,7 +381,20 @@ async function handleRegister() {
   position: relative;
 }
 
-.input-row .field-input {
+.field-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.field-input.has-icon {
+  padding-left: 42px;
+}
+
+.field-input.has-action {
   padding-right: 70px;
 }
 
@@ -357,7 +426,7 @@ async function handleRegister() {
 .submit-btn {
   width: 100%;
   padding: 15px;
-  background: #0d2040;
+  background: linear-gradient(135deg, #123158 0%, #0d2040 100%);
   color: #ffffff;
   border: none;
   border-radius: 14px;
@@ -365,52 +434,26 @@ async function handleRegister() {
   font-weight: 700;
   cursor: pointer;
   margin-top: 8px;
-  transition: background 0.2s;
-}
-
-.submit-btn:hover { background: #1a3560; }
-.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.demo-section { margin-top: 24px; }
-
-.demo-label {
-  text-align: center;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: #9ca3af;
-  margin-bottom: 10px;
-  position: relative;
-}
-
-.demo-label::before,
-.demo-label::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 30%;
-  height: 1px;
-  background: #e5e7eb;
-}
-
-.demo-label::before { left: 0; }
-.demo-label::after { right: 0; }
-
-.demo-card {
-  background: #f9fafb;
-  border-radius: 12px;
-  padding: 12px 16px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(13,32,64,0.3);
 }
 
-.demo-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
+.submit-btn:hover {
+  background: linear-gradient(135deg, #1a3560 0%, #163056 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(13,32,64,0.4);
 }
 
-.demo-key { color: #9ca3af; }
-.demo-val { color: #111827; font-weight: 600; }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.footer-note {
+  margin-top: 24px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+  text-align: center;
+}
 </style>

@@ -13,7 +13,7 @@
         <q-btn flat round :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'" color="white" @click="toggleDark" size="sm" class="q-mr-sm">
           <q-tooltip>{{ $q.dark.isActive ? 'Modo claro' : 'Modo escuro' }}</q-tooltip>
         </q-btn>
-        <div class="user-chip">
+        <div class="user-chip" @click="router.push('/profile')">
           <q-icon name="person" size="16px" />
           <span>{{ auth.user?.name }}</span>
         </div>
@@ -132,7 +132,13 @@ function handleLogout() {
   padding: 5px 12px;
   font-size: 13px;
   color: white;
+  cursor: pointer;
+  transition: background 0.15s;
   font-weight: 500;
+}
+
+.user-chip:hover {
+  background: rgba(255,255,255,0.18);
 }
 
 .sidebar-brand {

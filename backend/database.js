@@ -33,6 +33,13 @@ db.exec(`
     phone TEXT,
     birth_date TEXT,
     address TEXT,
+    has_allergy INTEGER DEFAULT 0,
+    has_chronic_disease INTEGER DEFAULT 0,
+    takes_medication INTEGER DEFAULT 0,
+    had_surgery INTEGER DEFAULT 0,
+    is_smoker INTEGER DEFAULT 0,
+    has_health_plan INTEGER DEFAULT 0,
+    photo TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -49,6 +56,17 @@ db.exec(`
     FOREIGN KEY (hospital_id) REFERENCES hospitals(id)
   );
 `)
+
+const patientColumns = ['has_allergy', 'has_chronic_disease', 'takes_medication', 'had_surgery', 'is_smoker', 'has_health_plan']
+const existingColumns = new Set(db.prepare("PRAGMA table_info(patients)").all().map(c => c.name))
+patientColumns.forEach(col => {
+  if (!existingColumns.has(col)) {
+    db.exec(`ALTER TABLE patients ADD COLUMN ${col} INTEGER DEFAULT 0`)
+  }
+})
+if (!existingColumns.has('photo')) {
+  db.exec('ALTER TABLE patients ADD COLUMN photo TEXT')
+}
 
 const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get()
 if (userCount.count === 0) {

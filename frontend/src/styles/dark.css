@@ -84,3 +84,67 @@ body.body--dark .demo-card {
 body.body--dark .demo-val {
   color: #f1f5f9;
 }
+
+body.body--dark .checklist-box {
+  background: #0f172a;
+}
+
+body.body--dark .checklist-title {
+  color: #94a3b8;
+}
+
+body.body--dark .photo-preview {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+body.body--dark .view-toggle {
+  background: #1e293b;
+}
+
+body.body--dark .view-btn {
+  color: #94a3b8;
+}
+
+body.body--dark .calendar-month-label {
+  color: #f1f5f9;
+}
+
+body.body--dark .cal-nav-btn {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+body.body--dark .cal-day {
+  background: #0f172a;
+}
+
+body.body--dark .cal-day-number {
+  color: #cbd5e1;
+}
+
+body.body--dark .cal-weekday {
+  color: #64748b;
+}
+
+body.body--dark .summary-name {
+  color: #f1f5f9;
+}
+
+body.body--dark .summary-email,
+body.body--dark .summary-row {
+  color: #94a3b8;
+}
+
+body.body--dark .summary-divider {
+  background: #334155;
+}
+
+body.body--dark .section-divider span {
+  background: #1e293b;
+  color: #64748b;
+}
+
+body.body--dark .section-divider::before {
+  background: #334155;
+}
