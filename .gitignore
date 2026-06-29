@@ -7,10 +7,6 @@ backend/*.db-journal
 backend/*.db-wal
 backend/*.db-shm
 
-# Variáveis de ambiente
-.env
-.env.local
-
 # Build do frontend
 frontend/dist/
 
