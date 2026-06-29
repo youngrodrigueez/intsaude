@@ -13,6 +13,7 @@ describe('Agendamentos', () => {
 
   it('abre o formulário de novo agendamento', () => {
     cy.contains('button', 'Novo Agendamento').click()
+    cy.get('.q-dialog').should('be.visible')
     cy.get('.dialog-title').contains('Novo Agendamento').should('be.visible')
   })
 
@@ -33,11 +34,13 @@ describe('Agendamentos', () => {
 
   it('abre o formulário de edição ao clicar em editar', () => {
     cy.get('.edit-btn').first().click()
+    cy.get('.q-dialog').should('be.visible')
     cy.contains('Editar Agendamento').should('be.visible')
   })
 
   it('exibe diálogo de confirmação ao excluir', () => {
     cy.get('.del-btn').first().click()
+    cy.get('.q-dialog').should('be.visible')
     cy.contains('Confirmar exclusão').should('be.visible')
     cy.contains('Cancelar').click()
   })

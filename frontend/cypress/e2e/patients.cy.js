@@ -12,12 +12,14 @@ describe('Pacientes', () => {
 
   it('abre o formulário de novo paciente', () => {
     cy.contains('button', 'Novo Paciente').click()
+    cy.get('.q-dialog').should('be.visible')
     cy.get('.dialog-title').contains('Novo Paciente').should('be.visible')
     cy.get('input').should('have.length.greaterThan', 0)
   })
 
   it('cadastra um novo paciente', () => {
     cy.contains('button', 'Novo Paciente').click()
+    cy.get('.q-dialog').should('be.visible')
     cy.get('input[aria-label="Nome completo *"], .q-input input').eq(0).type('Paciente Cypress')
     cy.get('input[aria-label="CPF *"], .q-input input').eq(1).type('99988877766')
     cy.get('input[aria-label="Telefone"], .q-input input').eq(2).type('61999999999')
@@ -36,6 +38,7 @@ describe('Pacientes', () => {
 
   it('abre o formulário de edição ao clicar em editar', () => {
     cy.get('.edit-btn').first().click()
+    cy.get('.q-dialog').should('be.visible')
     cy.contains('Editar Paciente').should('be.visible')
   })
 })
